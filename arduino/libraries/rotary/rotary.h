@@ -5,12 +5,12 @@ namespace rotary {
 class Rotary {
  public:
   /**
-   * Instantiate the Rotary object and set up the pins as inputs.
+   * Instantiate the Rotary object and set up the input pins.
    *
-   * @param pin1 The pin that pin 1 from the encoder is plugged into.
-   * @param pin2 The pin that pin 2 from the encoder is plugged into.
+   * @param clk The pin that CLK output from the encoder is plugged into.
+   * @param dt The pin that DT output from the encoder is plugged into.
    */
-  Rotary(unsigned char pin1, unsigned char pin2);
+  Rotary(unsigned char clk, unsigned char dt);
 
   /**
    * Used to indicate that the encoder has been turned either clockwise,
@@ -35,8 +35,8 @@ class Rotary {
   enum State : unsigned char;
   static const State NEXT_STATE[8][4];
   State state;
-  unsigned char pin1;
-  unsigned char pin2;
+  unsigned char clk;
+  unsigned char dt;
 };
 }
 

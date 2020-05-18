@@ -7,19 +7,20 @@
 //  table as it registered turns of the encoder incorrectly (see
 //  https://github.com/buxtronix/arduino/issues/3).
 
-#include "Arduino.h"
 #include "rotary.h"
+
+#include "Arduino.h"
 
 namespace rotary {
 
 // A clockwise turn of the encoder should be registered when the state of its
 // pins go through the following* binary sequence: 00 -> 10 -> 11 -> 01 -> 00,
-// where the value of the 2 bit is the signal from pin 1 and the value of the
-// 1 bit is the signal from pin 2. The only exception is that the state may
-// bounce between two consecutive elements of the sequence, which accounts for
-// signal bounce. For example, if the state is currently 10 and the signal on
-// the pin 2 changes to 1, it may bounce between 1 and 0 before stabilising at
-// 1, making the state bounce between 10 and 11.
+// where the value of the 2 bit is the signal from CLK output and the value of
+// the 1 bit is the signal from the DT output. The only exception is that the
+// state may bounce between two consecutive elements of the sequence, which
+// accounts for signal bounce. For example, if the state is currently 10 and the
+// signal from the DT output changes to 1, it may bounce between 1 and 0 before
+// stabilising at 1, making the state bounce between 10 and 11.
 //
 // This behaviour is described by the finite state machine in statemachine.png,
 // where the arrival at either of the states CW_FINISH or ACW_FINISH indicates
@@ -63,14 +64,14 @@ const Rotary::State Rotary::NEXT_STATE[8][4] = {
     {START, FAULT, FAULT, FAULT},
 };
 
-Rotary::Rotary(unsigned char pin1, unsigned char pin2)
-    : pin1(pin1), pin2(pin2), state(State::START) {
-  pinMode(pin1, INPUT);
-  pinMode(pin2, INPUT);
+Rotary::Rotary(unsigned char clk, unsigned char dt)
+    : clk(clk), dt(dt), state(State::START) {
+  pinMode(clk, INPUT);
+  pinMode(dt, INPUT);
 }
 
 Rotary::Direction Rotary::processInputs() {
-  unsigned char pinState = (digitalRead(pin1) << 1) | digitalRead(pin2);
+  unsigned char pinState = (digitalRead(clk) << 1) | digitalRead(dt);
 
   // States are unchanged when ANDed with 0b111 apart from CW_FINISH and
   // ACW_FINISH which go to 0.
@@ -81,3 +82,4 @@ Rotary::Direction Rotary::processInputs() {
   return state & 0b11000;
 }
 }
+}  // namespace rotary
