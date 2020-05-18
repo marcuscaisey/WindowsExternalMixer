@@ -63,8 +63,8 @@ const Rotary::State Rotary::NEXT_STATE[8][4] = {
     {START, FAULT, FAULT, FAULT},
 };
 
-Rotary::Rotary(unsigned char pin1, unsigned char pin2)
-    : pin1(pin1), pin2(pin2), state(State::START) {
+Rotary::Rotary(unsigned char id, unsigned char pin1, unsigned char pin2)
+    : id(id), pin1(pin1), pin2(pin2), state(State::START) {
   pinMode(pin1, INPUT);
   pinMode(pin2, INPUT);
 }
@@ -80,4 +80,6 @@ Rotary::Direction Rotary::processInputs() {
   // states.
   return state & 0b11000;
 }
+
+unsigned char Rotary::getId() { return id; }
 }
