@@ -79,7 +79,6 @@ Rotary::Direction Rotary::processInputs() {
 
   // Returns CW_FINISH and ACW_FINISH for each respectively, and 0 for all other
   // states.
-  return state & 0b11000;
-}
+  return (Direction)(state & 0b11000);
 }
 }  // namespace rotary
