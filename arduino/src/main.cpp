@@ -8,6 +8,8 @@ using rotary::Rotary;
 
 Rotary rotary1 = Rotary(CLK, DT);
 
+void isr();
+
 void setup() {
   Serial.begin(9600);
   Serial.println("setup begin");
@@ -21,7 +23,7 @@ void setup() {
 void loop() {}
 
 void isr() {
-  Rotary::Direction direction = rotary.processInputs();
+  Rotary::Direction direction = rotary1.processInputs();
   switch (direction) {
     case Rotary::Direction::CLOCKWISE:
       Serial.println("u");
