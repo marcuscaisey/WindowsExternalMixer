@@ -38,6 +38,6 @@ class Rotary {
   unsigned char clk;
   unsigned char dt;
 };
-}
+}  // namespace rotary
 
 #endif
