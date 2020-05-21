@@ -144,3 +144,6 @@ cython_debug/
 .idea/**
 
 .DS_STORE
+
+# cmake build files
+cmake-build-*
