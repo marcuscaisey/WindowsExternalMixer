@@ -5,7 +5,9 @@
 //
 //  I've rewritten the Rotary class in a more OOP style and "fixed" the state
 //  table as it registered turns of the encoder incorrectly (see
-//  https://github.com/buxtronix/arduino/issues/3).
+//  https://github.com/buxtronix/arduino/issues/3) and didn't wait for 00 pin
+//  state after an invalid state had occurred
+//  (see https://github.com/buxtronix/arduino/issues/6).
 
 #include "rotary.h"
 
@@ -24,7 +26,9 @@ namespace rotary {
 //
 // This behaviour is described by the finite state machine in statemachine.png,
 // where the arrival at either of the states CW_FINISH or ACW_FINISH indicates
-// that the encoder has been turned clockwise and anticlockwise respectively.
+// that the encoder has been turned clockwise and anticlockwise respectively. If
+// an invalid pin state occurs, then the state machine remains in a FAULT state,
+// only returning back to the START once a valid 00 occurs again.
 //
 // *An anti-clockwise turn follows the sequence in reverse.
 enum Rotary::State : unsigned char {
