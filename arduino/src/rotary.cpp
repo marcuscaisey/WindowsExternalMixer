@@ -31,7 +31,7 @@ namespace rotary {
 // only returning back to the START once a valid 00 occurs again.
 //
 // *An anti-clockwise turn follows the sequence in reverse.
-enum Rotary::State : unsigned char {
+enum Rotary::State : byte {
   START = 0b0,
   CW1 = 0b1,
   CW2 = 0b10,
@@ -68,14 +68,14 @@ const Rotary::State Rotary::NEXT_STATE[8][4] = {
     {START, FAULT, FAULT, FAULT},
 };
 
-Rotary::Rotary(unsigned char clk, unsigned char dt)
+Rotary::Rotary(byte clk, byte dt)
     : clk(clk), dt(dt), state(State::START) {
   pinMode(clk, INPUT);
   pinMode(dt, INPUT);
 }
 
 Rotary::Direction Rotary::processInputs() {
-  unsigned char pinState = (digitalRead(clk) << 1) | digitalRead(dt);
+  byte pinState = (digitalRead(clk) << 1) | digitalRead(dt);
 
   // States are unchanged when ANDed with 0b111 apart from CW_FINISH and
   // ACW_FINISH which go to 0.
