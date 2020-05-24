@@ -82,6 +82,6 @@ Rotary::Direction Rotary::processPinState() {
   return (Direction)(state & 0b11000);
 }
 
-bool Rotary::isConnectedTo(byte pin) const { return pin == clk || pin == clk; }
+bool Rotary::isConnectedTo(byte pin) const { return pin == clk || pin == dt; }
 
 }  // namespace rotary
