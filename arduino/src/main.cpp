@@ -1,35 +1,43 @@
 #include "Arduino.h"
+#define EI_ARDUINO_INTERRUPTED_PIN
+#include "EnableInterrupt.h"
 #include "rotary.h"
 
 using rotary::Rotary;
 
-#define CLK 2
-#define DT 3
+void rotatedIsr();
 
-Rotary rotary1 = Rotary(CLK, DT);
-
-void isr();
+Rotary rotaries[]{Rotary(2, 3), Rotary(5, 6)};
 
 void setup() {
+  for (auto &rotary : rotaries) {
+    enableInterrupt(rotary.getClk(), rotatedIsr, CHANGE);
+    enableInterrupt(rotary.getDt(), rotatedIsr, CHANGE);
+  }
+
   Serial.begin(9600);
-  Serial.println("setup begin");
-
-  attachInterrupt(digitalPinToInterrupt(CLK), isr, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(DT), isr, CHANGE);
-
-  Serial.println("setup finish");
 }
 
 void loop() {}
 
-void isr() {
-  Rotary::Direction direction = rotary1.processInputs();
-  switch (direction) {
-    case Rotary::Direction::CLOCKWISE:
-      Serial.println("u");
+void rotatedIsr() {
+  byte i{0};
+
+  for (auto &rotary : rotaries) {
+    if (rotary.isConnectedTo(arduinoInterruptedPin)) {
+      Rotary::Direction direction{rotary.processPinState()};
+
+      switch (direction) {
+        case Rotary::CLOCKWISE:
+          Serial.println(String(i) + "cw");
+          break;
+        case Rotary::ANTI_CLOCKWISE:
+          Serial.println(String(i) + "acw");
+          break;
+      }
+
       break;
-    case Rotary::Direction::ANTI_CLOCKWISE:
-      Serial.println("d");
-      break;
+    }
+    i++;
   }
 }

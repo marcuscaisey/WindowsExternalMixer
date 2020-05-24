@@ -49,7 +49,7 @@ enum Rotary::State : byte {
 // is the next state of the encoder where the binary representation of n is the
 // current pin state. I.e. if the current state is CW1 and the current pin state
 // is 11, then the next state is given by NEXT_STATE[1][3] = CW1.
-const Rotary::State Rotary::NEXT_STATE[8][4] = {
+const Rotary::State Rotary::NEXT_STATE[8][4]{
     // START
     {START, ACW1, CW1, START},
     // CW1
@@ -68,14 +68,10 @@ const Rotary::State Rotary::NEXT_STATE[8][4] = {
     {START, FAULT, FAULT, FAULT},
 };
 
-Rotary::Rotary(byte clk, byte dt)
-    : clk(clk), dt(dt), state(State::START) {
-  pinMode(clk, INPUT);
-  pinMode(dt, INPUT);
-}
+Rotary::Rotary(byte clk, byte dt) : clk{clk}, dt{dt}, state{START} {}
 
-Rotary::Direction Rotary::processInputs() {
-  byte pinState = (digitalRead(clk) << 1) | digitalRead(dt);
+Rotary::Direction Rotary::processPinState() {
+  byte pinState{(digitalRead(clk) << 1) | digitalRead(dt)};
 
   // States are unchanged when ANDed with 0b111 apart from CW_FINISH and
   // ACW_FINISH which go to 0.
@@ -85,4 +81,7 @@ Rotary::Direction Rotary::processInputs() {
   // states.
   return (Direction)(state & 0b11000);
 }
+
+bool Rotary::isConnectedTo(byte pin) const { return pin == clk || pin == clk; }
+
 }  // namespace rotary

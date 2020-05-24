@@ -1,16 +1,19 @@
-#include "Arduino.h"
-
 #ifndef ROTARY_H
 #define ROTARY_H
 
+#include "Arduino.h"
+
 namespace rotary {
+/*
+ * Represents a digital encoder.
+ */
 class Rotary {
  public:
   /**
-   * Instantiate the Rotary object and set up the input pins.
+   * Instantiate the Rotary object.
    *
-   * @param clk The pin that CLK output from the encoder is plugged into.
-   * @param dt The pin that DT output from the encoder is plugged into.
+   * @param clk The pin that CLK output from the encoder is connected to.
+   * @param dt The pin that DT output from the encoder is connected to.
    */
   Rotary(byte clk, byte dt);
 
@@ -31,7 +34,19 @@ class Rotary {
    * @returns Either CLOCKWISE/ANTI_CLOCKWISE if the encoder has been turned
    *          and NONE if not.
    */
-  Direction processInputs();
+  Direction processPinState();
+
+  /**
+   * Whether the encoder is connected to a pin.
+   *
+   * @param pin The pin.
+   * @return true or false.
+   */
+  bool isConnectedTo(byte pin) const;
+
+  byte getClk() const { return clk; }
+
+  byte getDt() const { return dt; }
 
  private:
   enum State : byte;

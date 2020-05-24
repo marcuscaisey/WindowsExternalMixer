@@ -7,12 +7,18 @@ project(WindowsExternalMixer
         LANGUAGES CXX)
 
 set(SRC_DIR arduino/src)
+set(LIBS_DIR arduino/libs)
 
 set(SOURCES
         ${SRC_DIR}/main.cpp
         ${SRC_DIR}/rotary.cpp)
 
+set(LIBS
+        ${LIBS_DIR}/EnableInterrupt)
+
 add_executable(main ${SOURCES})
+
+target_include_directories(main PRIVATE ${LIBS})
 
 target_link_arduino_libraries(main PRIVATE core)
 
