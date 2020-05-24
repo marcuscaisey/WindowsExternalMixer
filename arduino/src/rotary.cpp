@@ -68,9 +68,16 @@ const Rotary::State Rotary::NEXT_STATE[8][4]{
     {START, FAULT, FAULT, FAULT},
 };
 
-Rotary::Rotary(byte clk, byte dt) : clk{clk}, dt{dt}, state{START} {}
+Rotary::Rotary(byte clk, byte dt, byte sw)
+    : clk{clk}, dt{dt}, sw{sw}, state{START}, lastClick{0} {}
 
-Rotary::Direction Rotary::processPinState() {
+void Rotary::setupInputs() {
+  pinMode(clk, INPUT);
+  pinMode(dt, INPUT);
+  pinMode(sw, INPUT_PULLUP);
+}
+
+Rotary::Direction Rotary::processRotation() {
   byte pinState{(digitalRead(clk) << 1) | digitalRead(dt)};
 
   // States are unchanged when ANDed with 0b111 apart from CW_FINISH and
@@ -82,6 +89,24 @@ Rotary::Direction Rotary::processPinState() {
   return (Direction)(state & 0b11000);
 }
 
-bool Rotary::isConnectedTo(byte pin) const { return pin == clk || pin == dt; }
+bool Rotary::processClick() {
+  // Don't even bother reading the state if bounceDelay ms have not passed since
+  // the last click, since the signal is probably due to bounce.
+  if (millis() - lastClick < bounceDelay) {
+    return false;
+  }
 
+  byte pinState{digitalRead(sw)};
+
+  if (pinState == LOW) {
+    lastClick = millis();
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool Rotary::isConnectedTo(byte pin) const {
+  return pin == clk || pin == dt || pin == sw;
+}
 }  // namespace rotary

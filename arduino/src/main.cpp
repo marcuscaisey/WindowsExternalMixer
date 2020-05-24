@@ -6,16 +6,19 @@
 using rotary::Rotary;
 
 void rotatedIsr();
+void clickedIsr();
 
-Rotary rotaries[]{Rotary(2, 3), Rotary(5, 6)};
+Rotary rotaries[]{Rotary(2, 3, 4), Rotary(5, 6, 7)};
 
 void setup() {
+  Serial.begin(9600);
+
   for (auto &rotary : rotaries) {
+    rotary.setupInputs();
     enableInterrupt(rotary.getClk(), rotatedIsr, CHANGE);
     enableInterrupt(rotary.getDt(), rotatedIsr, CHANGE);
+    enableInterrupt(rotary.getSw(), clickedIsr, FALLING);
   }
-
-  Serial.begin(9600);
 }
 
 void loop() {}
@@ -25,7 +28,7 @@ void rotatedIsr() {
 
   for (auto &rotary : rotaries) {
     if (rotary.isConnectedTo(arduinoInterruptedPin)) {
-      Rotary::Direction direction{rotary.processPinState()};
+      Rotary::Direction direction{rotary.processRotation()};
 
       switch (direction) {
         case Rotary::CLOCKWISE:
@@ -34,6 +37,22 @@ void rotatedIsr() {
         case Rotary::ANTI_CLOCKWISE:
           Serial.println(String(i) + "acw");
           break;
+      }
+
+      break;
+    }
+    i++;
+  }
+}
+
+void clickedIsr() {
+  byte i{0};
+
+  for (auto &rotary : rotaries) {
+    if (rotary.isConnectedTo(arduinoInterruptedPin)) {
+      bool clicked{rotary.processClick()};
+      if (clicked) {
+        Serial.println(String(i) + "s");
       }
 
       break;

@@ -12,10 +12,16 @@ class Rotary {
   /**
    * Instantiate the Rotary object.
    *
-   * @param clk The pin that CLK output from the encoder is connected to.
-   * @param dt The pin that DT output from the encoder is connected to.
+   * @param clk The pin that the CLK output from the encoder is connected to.
+   * @param dt The pin that the DT output from the encoder is connected to.
+   * @param sw The pin that the SW output from the encoder is connected to.
    */
-  Rotary(byte clk, byte dt);
+  Rotary(byte clk, byte dt, byte sw);
+
+  /**
+   * Setup the Arduino pins which are connected to the encoder.
+   */
+  void setupInputs();
 
   /**
    * Used to indicate that the encoder has been turned either clockwise,
@@ -28,13 +34,20 @@ class Rotary {
   };
 
   /**
-   * Read the input pins and return the direction that the encoder has been
-   * turned.
+   * Read the CLK and DT outputs and return the direction that the encoder has
+   * been turned.
    *
    * @returns Either CLOCKWISE/ANTI_CLOCKWISE if the encoder has been turned
    *          and NONE if not.
    */
-  Direction processPinState();
+  Direction processRotation();
+
+  /**
+   * Read the SW output and return whether the encoder has been clicked.
+   *
+   * @return true or false.
+   */
+  bool processClick();
 
   /**
    * Whether the encoder is connected to a pin.
@@ -45,15 +58,18 @@ class Rotary {
   bool isConnectedTo(byte pin) const;
 
   byte getClk() const { return clk; }
-
   byte getDt() const { return dt; }
+  byte getSw() const { return sw; }
 
  private:
   enum State : byte;
   static const State NEXT_STATE[8][4];
   State state;
+  unsigned long lastClick;
+  static const byte bounceDelay{100};
   byte clk;
   byte dt;
+  byte sw;
 };
 }  // namespace rotary
 
