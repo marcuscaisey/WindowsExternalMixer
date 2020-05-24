@@ -1,4 +1,5 @@
 set(CMAKE_TOOLCHAIN_FILE cmake/Arduino-toolchain.cmake)
+set(ARDUINO_BOARD_OPTIONS_FILE cmake/BoardOptions.cmake)
 
 cmake_minimum_required(VERSION 3.16.5)
 project(WindowsExternalMixer
