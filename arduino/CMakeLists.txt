@@ -6,8 +6,8 @@ project(WindowsExternalMixer
         HOMEPAGE_URL https://github.com/marcuscaisey/WindowsExternalMixer
         LANGUAGES CXX)
 
-set(SRC_DIR arduino/src)
-set(LIBS_DIR arduino/libs)
+set(SRC_DIR src)
+set(LIBS_DIR libs)
 
 set(SOURCES
         ${SRC_DIR}/main.cpp
