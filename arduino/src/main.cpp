@@ -53,10 +53,10 @@ void rotatedIsr() {
 
       switch (direction) {
         case Rotary::CLOCKWISE:
-          Serial.print(actionMessage(i, CLOCKWISE_TURN));
+          Serial.write(actionMessage(i, CLOCKWISE_TURN));
           break;
         case Rotary::ANTI_CLOCKWISE:
-          Serial.print(actionMessage(i, ANTI_CLOCKWISE_TURN));
+          Serial.write(actionMessage(i, ANTI_CLOCKWISE_TURN));
           break;
       }
 
@@ -73,7 +73,7 @@ void clickedIsr() {
     if (rotary.isConnectedTo(arduinoInterruptedPin)) {
       bool clicked{rotary.processClick()};
       if (clicked) {
-        Serial.print(actionMessage(i, CLICK));
+        Serial.write(actionMessage(i, CLICK));
       }
 
       break;
