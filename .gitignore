@@ -147,3 +147,5 @@ cython_debug/
 
 # cmake build files
 cmake-build-*
+
+notebooks/**
