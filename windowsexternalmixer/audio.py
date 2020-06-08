@@ -49,12 +49,7 @@ class Speakers:
 
     @property
     def state(self):
-        """
-        Return the state of the speakers.
-
-        Returns:
-            A State object.
-        """
+        """State: State of the speakers."""
         return self.State(self.mm_device.GetState())
 
 
@@ -171,10 +166,5 @@ class Session:
 
     @property
     def state(self):
-        """
-        Return the state of the audio session.
-
-        Returns:
-            A State object.
-        """
+        """State: State of the audio session."""
         return self.State(self._audio_session_control.GetState())
