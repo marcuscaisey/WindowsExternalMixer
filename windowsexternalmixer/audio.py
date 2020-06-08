@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 from ctypes import cast, POINTER, HRESULT
 from ctypes.wintypes import BOOL, DWORD, LPWSTR, BYTE
 from enum import IntEnum
@@ -9,35 +8,7 @@ from comtypes import GUID, COMMETHOD, IUnknown
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume, IAudioSessionManager2, ISimpleAudioVolume
 
 
-class VolumeControl(ABC):
-    """Object representing a volume control in the mixer."""
-
-    @property
-    @abstractmethod
-    def level(self):
-        """
-        int: Current level of the volume control as a number between 0 and 100.
-        """
-        pass
-
-    @level.setter
-    @abstractmethod
-    def level(self, value):
-        pass
-
-    @property
-    @abstractmethod
-    def is_muted(self):
-        """bool: Whether the volume control is muted or not."""
-        pass
-
-    @is_muted.setter
-    @abstractmethod
-    def is_muted(self, value):
-        pass
-
-
-class Speakers(VolumeControl):
+class Speakers:
     """
     Object representing the main speakers.
 
@@ -138,7 +109,7 @@ class SessionNotFoundError(Exception):
     """Audio session was not found."""
 
 
-class Session(VolumeControl):
+class Session:
     """
     Object representing an audio session.
 
